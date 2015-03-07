@@ -68,7 +68,7 @@
 (define (random-index e)
   (if (infinite-enum? e)
       (random-natural-w/o-limit)
-      (random-natural (enum-size e))))
+      (random-natural (enum-count e))))
 
 (define (BPP-digits N)
   (let loop ([8Pi -8])
@@ -122,10 +122,10 @@
      (loop))))
 
 (define (infinite-sequence/e inner/e)
-  (cond [(= 0 (enum-size inner/e)) empty/e]
+  (cond [(= 0 (enum-count inner/e)) empty/e]
         [else
          (define seed/e natural/e)
-         (define K (enum-size inner/e))
+         (define K (enum-count inner/e))
          (define (seed->seq N)
            (define K-seq
              (10-sequence->K-sequence K (in-generator (BPP-digits (+ 1 N)))))
@@ -154,7 +154,7 @@ In plain English, we'll
   (define needed-nats/e 
     (cond [(infinite-enum? e) natural/e]
           [else
-           (take/e natural/e (expt 2 (enum-size e)))]))
+           (take/e natural/e (expt 2 (enum-count e)))]))
   ;; The greatest number with 31 bits is n = 2^31 - 1, for which 2^n takes about 5 seconds
   ;; to compute on my machine. Further, trying to compute 2^(2^32) bombs out with
   ;; "Interactions disabled".
@@ -180,7 +180,7 @@ In plain English, we'll
   ;; when it actually has finite size
   (define n
     (min (integer-length i)
-         (if (finite-enum? e) (enum-size e) +inf.0)))
+         (if (finite-enum? e) (enum-count e) +inf.0)))
   (for/fold ([acc  (set)]) ([d  (in-range n)])
     (if (bitwise-bit-set? i d)
         (set-add acc (from-nat e d))
@@ -419,7 +419,7 @@ In plain English, we'll
   (cond
     [simple-recursive?
      (define fix-size
-       (if (and (finite-enum? e) (= 0 (enum-size e)))
+       (if (and (finite-enum? e) (= 0 (enum-count e)))
            1
            +inf.0))
      (define result-e
@@ -539,7 +539,7 @@ In plain English, we'll
       (and/c (if (= size +inf.0)
                  infinite-enum?
                  (and/c finite-enum?
-                        (let ([matching-size? (λ (e) (= (enum-size e) size))])
+                        (let ([matching-size? (λ (e) (= (enum-count e) size))])
                           matching-size?)))
              (if is-two-way-enum?
                  two-way-enum?

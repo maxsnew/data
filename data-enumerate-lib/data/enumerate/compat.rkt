@@ -11,7 +11,7 @@
   (apply unsafe:map/e f1 f2 #:contract any/c es))
 
 (define enum? :enum?)
-(define size :enum-size)
+(define size :enum-count)
 (define from-nat :from-nat)
 (define to-nat :to-nat)
 (define (filter/e . args) (error 'filter/e "this one is gone; don't use it"))
@@ -20,7 +20,7 @@
   (cond
     [(:finite-enum? e)
      (let loop ([n 0])
-       (cond [(n . >= . (:enum-size e))
+       (cond [(n . >= . (:enum-count e))
               empty-stream]
              [else
               (stream-cons (:from-nat e n)
