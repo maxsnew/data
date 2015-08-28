@@ -116,6 +116,12 @@
          #:flat-enum?
          [is-flat-enum? boolean?])
         [result enum?])]
+  [binary-biased-cons/e
+   (-> enum? exact-positive-integer? enum? exact-positive-integer? enum?)]
+  [inductive-list/e
+   (->* ()
+        #:rest (listof enum?)
+        enum?)]
   [list/e
    (->* ()
         (#:ordering (or/c 'diagonal 'square)) 

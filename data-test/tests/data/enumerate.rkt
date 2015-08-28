@@ -472,6 +472,16 @@
  (check-bijection? (unsafe:box-list/e string/e natural/e two-way-real/e))
  (check-bijection? (unsafe:box-list/e)))
 
+;; biased product tests
+(test-begin
+ (for* ([i (in-range 5)]
+        [j (in-range 5)])
+   (check-bijection? (binary-biased-cons/e string/e (add1 i) two-way-real/e (add1 j))))
+ (for ([i (in-range 5)])
+   (check-bijection?
+    (apply inductive-list/e
+           (for/list ([_ (in-range i)]) natural/e)))))
+
 ;; multi-arg map/e test
 (define sums/e
   (map/e
@@ -996,3 +1006,12 @@
   
   (check-equal? (from-nat funny-tree/e 3)
                 '(((#f . 1) . 1) . 1)))
+
+(define count 1000000)
+(define (time-it list/e n count)
+  (define e (apply list/e (for/list ([i (in-range n)]) natural/e)))
+  (time
+   (for ([i (in-range count)]
+         [_ (in-enum e)])
+     (void))))
+(define (timer list/e) (time-it list/e 5 count))
